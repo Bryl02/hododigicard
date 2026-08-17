@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser } from "../services/auth";
+import { loginUser, resetPassword } from "../services/auth";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,6 +13,24 @@ function Login() {
     try {
       await loginUser(email, password);
       setMessage("Login successful!");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
+  async function handleResetPassword() {
+    if (!email) {
+      setMessage("Please enter your email address first.");
+      return;
+    }
+
+    setMessage("");
+
+    try {
+      await resetPassword(email);
+      setMessage(
+        "Password reset email sent. Please check your inbox."
+      );
     } catch (error) {
       setMessage(error.message);
     }
@@ -58,6 +76,15 @@ function Login() {
           Sign In
         </button>
       </form>
+
+      <br />
+
+      <button
+        type="button"
+        onClick={handleResetPassword}
+      >
+        Forgot Password?
+      </button>
 
       {message && <p>{message}</p>}
     </main>
